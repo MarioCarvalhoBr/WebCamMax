@@ -280,6 +280,10 @@ class MainWindow(QMainWindow):
             "<li>Salvar/Carregar .mcam</li>"
             "<li>Botão 'Abrir Webcam' -> abre a Tela Secundária</li>"
             "</ul>"
+            "<br>"
+            "<b>Desenvolvido por:</b> <br>"
+            "Mário de Araújo Carvalho"
+            "<b>GitHub:</b> <a href='https://github.com/MarioCarvalhoBr'>https://github.com/MarioCarvalhoBr</a>"
         )
         QtWidgets.QMessageBox.information(self, "Sobre", msg)
 
