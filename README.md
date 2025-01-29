@@ -1,6 +1,6 @@
 # WebCamMax
 
-WebCamMax é um software de código aberto que visa fornecer um conjunto de ferramentas para auxiliar na gestão de uma webcam para fins de gravação de vídeo.
+WebCamMax é um software de código aberto que visa fornecer um conjunto de ferramentas para auxiliar na gestão de uma webcam para fins de gravação de vídeo. Uma das principais funcionalidades é a possibilidade de TRAVAR A JANELA da webcam, mantendo-a sempre fixa na tela e podendo ser arrastada para qualquer posição. Além disso, o software oferece a possibilidade de mudar o formato da janela da webcam entre CIRCULAR e QUADRADA, aplicar filtros de imagem, desenhar na tela e muito mais.
 
 ## Sumário
 - [WebCamMax](#webcammax)
@@ -13,6 +13,7 @@ WebCamMax é um software de código aberto que visa fornecer um conjunto de ferr
       - [Opção 2: Instalar individualmente](#opção-2-instalar-individualmente)
   - [Como Usar](#como-usar)
     - [Executar em um único arquivo](#executar-em-um-único-arquivo)
+  - [Screenshots](#screenshots)
   - [Funcionalidades da tela principal](#funcionalidades-da-tela-principal)
   - [Funcionalidades da Tela de WebCam](#funcionalidades-da-tela-de-webcam)
   - [Estrutura de Pastas](#estrutura-de-pastas)
@@ -75,6 +76,13 @@ Para iniciar o projeto, execute o script principal:
 ```bash
 python main.py
 ```
+
+## Screenshots
+|Tela Princial|WebCam Circular|
+|---|---|
+|![Tela Princial](assets/image_001.png)|![WebCam Circular](assets/image_002.png)|
+|WebCam Quadrada com Menu|Janela de Desenho|
+|![WebCam Quadrada com Menu](assets/image_003.png)|![Janela de Desenho](assets/image_004.png)|
 
 ## Funcionalidades da tela principal
 
