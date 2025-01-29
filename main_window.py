@@ -205,9 +205,6 @@ class MainWindow(QMainWindow):
             else:
                 self.close_drawing_window()
 
-            # Se existir a janela secundária (webcam), podemos também atualizar o estado nela
-            if self.second_window:
-                self.second_window.set_whiteboard_mode(mode)
         else:
             self.whiteboard_mode = mode
             self.close_drawing_window()
