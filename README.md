@@ -48,23 +48,22 @@ venv\Scripts\activate
 
 ### 2. Instalação dos Requerimentos
 
-#### Opção 1: Instalar via  requirements.txt
+#### Opção 2: Instalar individualmente (RECOMENDADO)
+Para instalar cada biblioteca de forma manual, execute no terminal (já com o ambiente virtual ativado):
 
+```bash
+pip install PyQt5==5.15.11
+pip install opencv-python==4.11.0.86
+pip install opencv-python-headless==4.11.0.86
+python3 main.py 
+```
+
+#### Opção 2: Instalar via  requirements.txt
 
 Se preferir instalar todos os pacotes de uma vez, utilize:
 ```bash
 pip install -r requirements.txt
 python3 main.py
-```
-
-#### Opção 2: Instalar individualmente
-Para instalar cada biblioteca de forma manual, execute no terminal (já com o ambiente virtual ativado):
-
-```bash
-pip install PyQt5
-pip install opencv-python
-pip install opencv-python-headless
-python3 main.py 
 ```
 
 ## Como Usar
@@ -170,18 +169,23 @@ Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICEN
 Se aparecer o erro abaixo, execute o comando abaixo para corrigir o problema:
 
 ```bash
+-----------------------------------------
 ERROR: 
 QObject::moveToThread: Current thread (0x3ce0bd50) is not the object's thread (0x3d356b60).
 Cannot move to target thread (0x3ce0bd50)
-
-qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/carvalho/Desktop/PESSOAL/Softwares/WebCamMax/venv/lib/python3.12/site-packages/cv2/qt/plugins" even though it was found.
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "~/WebCamMax/venv/lib/python3.12/site-packages/cv2/qt/plugins" even though it was found.
 This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
-
 Available platform plugins are: xcb, linuxfb, minimal, offscreen, vnc, webgl.
-
 Aborted (core dumped)
 
+-----------------------------------------
 CORREÇÃO:
-export DISPLAY=:0
-# REPITA O PASSO DE INSTALAÇÃO DOS REQUERIMENTOS
+# DESINSTALAR AS BIBLIOTECAS DO requirements.txt
+    pip uninstall -r requirements.txt -y
+
+# INSTALAR MANUALMENTE
+    pip install PyQt5==5.15.11
+    pip install opencv-python==4.11.0.86
+    pip install opencv-python-headless==4.11.0.86
+    python3 main.py 
 ```

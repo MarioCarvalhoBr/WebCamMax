@@ -12,7 +12,7 @@ from filters import (
     apply_salt_pepper,
     apply_gray
 )
-
+ 
 class SecondWindow(QtWidgets.QWidget):
     """
     Exemplo de janela secundária (frameless) com webcam, modo caneta e vários botões em uma barra:
