@@ -9,8 +9,8 @@ WebCamMax é um software de código aberto que visa fornecer um conjunto de ferr
   - [Configuração](#configuração)
     - [1. Criação e Ativação de Ambiente Virtual (Venv)](#1-criação-e-ativação-de-ambiente-virtual-venv)
     - [2. Instalação dos Requerimentos](#2-instalação-dos-requerimentos)
-      - [Opção 1: Instalar via  requirements.txt](#opção-1-instalar-via--requirementstxt)
-      - [Opção 2: Instalar individualmente](#opção-2-instalar-individualmente)
+      - [Opção 2: Instalar individualmente (RECOMENDADO)](#opção-2-instalar-individualmente-recomendado)
+      - [Opção 2: Instalar via  requirements.txt](#opção-2-instalar-via--requirementstxt)
   - [Como Usar](#como-usar)
     - [Executar em um único arquivo](#executar-em-um-único-arquivo)
   - [Screenshots](#screenshots)
@@ -21,7 +21,7 @@ WebCamMax é um software de código aberto que visa fornecer um conjunto de ferr
   - [Requisitos](#requisitos)
   - [Licença](#licença)
   - [Correção de Bugs](#correção-de-bugs)
-    - [GNU/Linux - Plugin XC](#gnulinux---plugin-xc)
+    - [GNU/Linux - Plugin XCB](#gnulinux---plugin-xcb)
 
 ## Pré-requisitos
 
@@ -165,27 +165,27 @@ Contribuições são bem-vindas! Para propor melhorias, correções ou novas fun
 Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ## Correção de Bugs
-### GNU/Linux - Plugin XC 
+### GNU/Linux - Plugin XCB
 Se aparecer o erro abaixo, execute o comando abaixo para corrigir o problema:
 
+ERROR:
 ```bash
------------------------------------------
-ERROR: 
-QObject::moveToThread: Current thread (0x3ce0bd50) is not the object's thread (0x3d356b60).
-Cannot move to target thread (0x3ce0bd50)
-qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "~/WebCamMax/venv/lib/python3.12/site-packages/cv2/qt/plugins" even though it was found.
-This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
-Available platform plugins are: xcb, linuxfb, minimal, offscreen, vnc, webgl.
-Aborted (core dumped)
+  QObject::moveToThread: Current thread (0x3ce0bd50) is not the object's thread (0x3d356b60).
+  Cannot move to target thread (0x3ce0bd50)
+  qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "~/WebCamMax/venv/lib/python3.12/site-packages/cv2/qt/plugins" even though it was found.
+  This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+  Available platform plugins are: xcb, linuxfb, minimal, offscreen, vnc, webgl.
+  Aborted (core dumped)
+```
 
------------------------------------------
 CORREÇÃO:
-# DESINSTALAR AS BIBLIOTECAS DO requirements.txt
-    pip uninstall -r requirements.txt -y
+```bash
+### DESINSTALAR AS BIBLIOTECAS DO requirements.txt
+  pip uninstall -r requirements.txt -y
 
-# INSTALAR MANUALMENTE
-    pip install PyQt5==5.15.11
-    pip install opencv-python==4.11.0.86
-    pip install opencv-python-headless==4.11.0.86
-    python3 main.py 
+### INSTALAR MANUALMENTE
+  pip install PyQt5==5.15.11
+  pip install opencv-python==4.11.0.86
+  pip install opencv-python-headless==4.11.0.86
+  python3 main.py 
 ```
