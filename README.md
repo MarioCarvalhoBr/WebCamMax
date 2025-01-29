@@ -19,6 +19,8 @@ WebCamMax é um software de código aberto que visa fornecer um conjunto de ferr
   - [Contribuindo](#contribuindo)
   - [Requisitos](#requisitos)
   - [Licença](#licença)
+  - [Correção de Bugs](#correção-de-bugs)
+    - [GNU/Linux - Plugin XC](#gnulinux---plugin-xc)
 
 ## Pré-requisitos
 
@@ -51,19 +53,17 @@ venv\Scripts\activate
 Se preferir instalar todos os pacotes de uma vez, utilize:
 ```bash
 pip install -r requirements.txt
+python3 main.py
 ```
 
 #### Opção 2: Instalar individualmente
 Para instalar cada biblioteca de forma manual, execute no terminal (já com o ambiente virtual ativado):
 
 ```bash
-pip install cvzone==1.6.1
-pip install numpy==2.2.2
-pip install opencv_contrib_python==4.10.0.84
-pip install Pillow==11.1.0
-pip install PyQt5==5.15.11
-pip install PyQt5_sip==12.16.1
-pip install rembg==2.0.61
+pip install PyQt5
+pip install opencv-python
+pip install opencv-python-headless
+python3 main.py 
 ```
 
 ## Como Usar
@@ -156,3 +156,24 @@ Contribuições são bem-vindas! Para propor melhorias, correções ou novas fun
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Correção de Bugs
+### GNU/Linux - Plugin XC 
+Se aparecer o erro abaixo, execute o comando abaixo para corrigir o problema:
+
+```bash
+ERROR: 
+QObject::moveToThread: Current thread (0x3ce0bd50) is not the object's thread (0x3d356b60).
+Cannot move to target thread (0x3ce0bd50)
+
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/carvalho/Desktop/PESSOAL/Softwares/WebCamMax/venv/lib/python3.12/site-packages/cv2/qt/plugins" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: xcb, linuxfb, minimal, offscreen, vnc, webgl.
+
+Aborted (core dumped)
+
+CORREÇÃO:
+export DISPLAY=:0
+# REPITA O PASSO DE INSTALAÇÃO DOS REQUERIMENTOS
+```

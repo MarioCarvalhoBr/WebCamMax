@@ -1,10 +1,9 @@
 import cv2
-import numpy as np
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer, QPoint, QEvent
-from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QIcon, QRegion
-from PyQt5.QtWidgets import QStyle, QToolButton, QShortcut
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import Qt, QTimer, QEvent
+from PyQt5.QtGui import QImage, QPixmap, QIcon, QRegion
+from PyQt5.QtWidgets import QToolButton, QShortcut
 from PyQt5.QtGui import QKeySequence
 
 from filters import (
@@ -35,8 +34,7 @@ class SecondWindow(QtWidgets.QWidget):
         self,
         filter_selected=None,
         shape_selected="circle",
-        window_locked=False,
-        pen_mode=False
+        window_locked=False
     ):
         super().__init__()
 
@@ -49,19 +47,11 @@ class SecondWindow(QtWidgets.QWidget):
         self.filter_selected = filter_selected
         self.shape_selected = shape_selected
         self.window_locked = window_locked
-        self.pen_mode = pen_mode
         self.is_flipped = False
 
         # Controle de webcam
         self.cap = None
         self.timer = None
-
-        # Superfície de desenho (caneta)
-        self.drawing_surface = QtGui.QImage(self.size(), QtGui.QImage.Format_ARGB32)
-        self.drawing_surface.fill(Qt.transparent)
-        self.last_point = QPoint()
-        self.pen_color = Qt.red
-        self.pen_width = 3
 
         # Variáveis auxiliares para arrastar e redimensionar a janela
         self._is_dragging = False
@@ -228,8 +218,6 @@ class SecondWindow(QtWidgets.QWidget):
                 h, w, ch = rgb.shape
                 qt_img = QImage(rgb.data, w, h, ch * w, QImage.Format_RGB888)
                 pixmap = QPixmap.fromImage(qt_img)
-                # Sobrepõe o desenho (caneta)
-                pixmap = self.overlay_drawing(pixmap)
                 self.video_label.setPixmap(pixmap)
 
     def apply_filter(self, frame):
@@ -245,15 +233,6 @@ class SecondWindow(QtWidgets.QWidget):
 
     def flip_webcam(self):
         self.is_flipped = not self.is_flipped
-
-    # --------------------------------------------------------
-    # 3) Desenho (Caneta)
-    # --------------------------------------------------------
-    def overlay_drawing(self, pixmap):
-        painter = QPainter(pixmap)
-        painter.drawImage(0, 0, self.drawing_surface)
-        painter.end()
-        return pixmap
 
     # --------------------------------------------------------
     # 4) Maximizar / Restaurar
@@ -429,32 +408,18 @@ class SecondWindow(QtWidgets.QWidget):
             self.setMask(region)
 
     # --------------------------------------------------------
-    # 7) Eventos de Mouse (Desenho, Arraste, Resize)
+    # 7) Eventos de Mouse (Arraste, Resize)
     # --------------------------------------------------------
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            if self.pen_mode:
-                # Início do desenho
-                label_pos = self.video_label.mapFromParent(event.pos())
-                self.last_point = label_pos
-            else:
-                # Se não clicou no botão de resize => arrastar janela
-                if not self._is_over_button(self.btnResize, event):
-                    self._is_dragging = True
-                    self._drag_offset = event.globalPos() - self.frameGeometry().topLeft()
+            # Se não clicou no botão de resize => arrastar janela
+            if not self._is_over_button(self.btnResize, event):
+                self._is_dragging = True
+                self._drag_offset = event.globalPos() - self.frameGeometry().topLeft()
         super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
-        if self.pen_mode and (event.buttons() & Qt.LeftButton):
-            # Desenhando
-            label_pos = self.video_label.mapFromParent(event.pos())
-            painter = QPainter(self.drawing_surface)
-            pen = QPen(self.pen_color, self.pen_width, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-            painter.setPen(pen)
-            painter.drawLine(self.last_point, label_pos)
-            painter.end()
-            self.last_point = label_pos
-        elif self._is_dragging and (event.buttons() & Qt.LeftButton):
+        if self._is_dragging and (event.buttons() & Qt.LeftButton):
             # Arrastando janela
             self.move(event.globalPos() - self._drag_offset)
         elif self._is_resizing and (event.buttons() & Qt.LeftButton):
@@ -468,18 +433,9 @@ class SecondWindow(QtWidgets.QWidget):
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        if self.pen_mode and event.button() == Qt.LeftButton:
-            # Finaliza o traço
-            label_pos = self.video_label.mapFromParent(event.pos())
-            painter = QPainter(self.drawing_surface)
-            pen = QPen(self.pen_color, self.pen_width, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-            painter.setPen(pen)
-            painter.drawLine(self.last_point, label_pos)
-            painter.end()
-        else:
-            if event.button() == Qt.LeftButton:
-                self._is_dragging = False
-                self._is_resizing = False
+        if event.button() == Qt.LeftButton:
+            self._is_dragging = False
+            self._is_resizing = False
         super().mouseReleaseEvent(event)
 
     # --------------------------------------------------------
@@ -501,18 +457,11 @@ class SecondWindow(QtWidgets.QWidget):
 
     def _adjust_on_resize(self):
         """
-        Ajusta frames, label e desenho ao redimensionar.
+        Ajusta frames, label
         Também reposiciona a barra conforme o formato atual.
         """
         self.mainFrame.setGeometry(0, 0, self.width(), self.height())
         self.video_label.setGeometry(0, 0, self.mainFrame.width(), self.mainFrame.height())
-
-        new_image = QtGui.QImage(self.size(), QtGui.QImage.Format_ARGB32)
-        new_image.fill(Qt.transparent)
-        painter = QPainter(new_image)
-        painter.drawImage(0, 0, self.drawing_surface)
-        painter.end()
-        self.drawing_surface = new_image
 
         # Reposiciona a barra e a máscara
         self._adjust_toolbar_position()
@@ -538,9 +487,6 @@ class SecondWindow(QtWidgets.QWidget):
     def set_lock(self, locked):
         self.window_locked = locked
         self.apply_lock()
-
-    def set_pen_mode(self, mode):
-        self.pen_mode = mode
 
     def set_flip(self, flipped):
         self.is_flipped = flipped

@@ -1,9 +1,8 @@
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPixmap, QPainter, QPen, QImage, QColor
+from PyQt5.QtGui import QPainter, QPen, QImage
 from PyQt5.QtWidgets import (
     QMainWindow,
     QAction,
-    QMenuBar,
     QFileDialog,
     QMessageBox,
     QColorDialog,

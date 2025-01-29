@@ -1,18 +1,10 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (
     QMainWindow,
     QAction,
-    QFileDialog,
-    QMessageBox,
     QPushButton
 )
 
-from filters import (
-    apply_sobel,
-    apply_gaussian,
-    apply_salt_pepper,
-    apply_gray
-)
 from settings import save_mcam, load_mcam
 from second_window import SecondWindow
 from drawing_window import DrawingWindow
@@ -29,13 +21,13 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Tela Principal - Projeto Webcam")
-        self.resize(800, 600)
+        self.resize(600, 200)
 
         # Variáveis de estado
         self.filter_selected = None     # 'sobel', 'gaussian', 'salt_pepper', 'gray', None
         self.shape_selected = 'square'  # 'square' ou 'circle'
         self.window_locked = True
-        self.pen_mode = False
+        self.whiteboard_mode = False
         self.is_flipped = False
 
         # Referência à Tela Secundária (inicialmente None)
@@ -55,6 +47,18 @@ class MainWindow(QMainWindow):
         # Cria os menus
         self.create_menus()
 
+        # Redimensiona a janela para a centro da tela
+        self.set_window_centered()
+    def set_window_centered(self):
+        # Pega a geometria da tela
+        screen_geometry = QtWidgets.QApplication.desktop().screenGeometry()
+
+        # Calcula o centro da tela
+        x = (screen_geometry.width() - self.width()) // 2
+        y = (screen_geometry.height() - self.height()) // 2
+
+        # Move a janela para o centro
+        self.move(x, y)
     def create_menus(self):
         menu_bar = self.menuBar()
 
@@ -147,15 +151,13 @@ class MainWindow(QMainWindow):
             self.second_window = SecondWindow(
                 filter_selected=self.filter_selected,
                 shape_selected=self.shape_selected,
-                window_locked=self.window_locked,
-                pen_mode=self.pen_mode
+                window_locked=self.window_locked
             )
         else:
             # Atualiza as configurações da janela caso ela já exista
             self.second_window.set_filter(self.filter_selected)
             self.second_window.set_shape(self.shape_selected)
             self.second_window.set_lock(self.window_locked)
-            self.second_window.set_whiteboard_mode(self.pen_mode)
 
         self.second_window.show()
 
@@ -195,7 +197,7 @@ class MainWindow(QMainWindow):
             
     def set_whiteboard_mode(self, mode):
         if mode == True: 
-            self.pen_mode = mode
+            self.whiteboard_mode = mode
 
             # Ao ativar a caneta, abrimos a nova janela de desenho
             if mode:
@@ -207,7 +209,7 @@ class MainWindow(QMainWindow):
             if self.second_window:
                 self.second_window.set_whiteboard_mode(mode)
         else:
-            self.pen_mode = mode
+            self.whiteboard_mode = mode
             self.close_drawing_window()
 
     def open_drawing_window(self):
@@ -228,7 +230,6 @@ class MainWindow(QMainWindow):
             "filter_selected": self.filter_selected,
             "shape_selected": self.shape_selected,
             "window_locked": self.window_locked,
-            "pen_mode": self.pen_mode,
             "is_flipped": self.second_window.is_flipped
         }
         file_path, _ = QtWidgets.QFileDialog.getSaveFileName(
@@ -257,7 +258,6 @@ class MainWindow(QMainWindow):
                 self.filter_selected = config_data.get("filter_selected", None)
                 self.shape_selected = config_data.get("shape_selected", "square")
                 self.window_locked = config_data.get("window_locked", False)
-                self.pen_mode = config_data.get("pen_mode", False)
                 self.is_flipped = config_data.get("is_flipped", False)
 
                 # Se a segunda tela existir, atualiza:
@@ -265,7 +265,6 @@ class MainWindow(QMainWindow):
                     self.second_window.set_filter(self.filter_selected)
                     self.second_window.set_shape(self.shape_selected)
                     self.second_window.set_lock(self.window_locked)
-                    self.second_window.set_whiteboard_mode(self.pen_mode)
                     self.second_window.set_flip(self.is_flipped)
 
                 QtWidgets.QMessageBox.information(self, "Carregar Configurações", "Configurações carregadas com sucesso!")
